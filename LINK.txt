@@ -1,0 +1,2 @@
+https://maxpromer.github.io/LCD-Character-Creator/
+https://randomnerdtutorials.com/arduino-display-the-led-brightness-on-a-lcd-16x2/
