@@ -44,6 +44,7 @@ byte customCharH[] = {
 void setup() {
   lcd.init();
   lcd.clear();
+   lcd.backlight();
   lcd.setCursor(0,0);
   lcd.print("Flood Detection");
   lcd.setCursor(0,1);
@@ -63,15 +64,85 @@ void loop() {
        c = XBee.read();
        if (c == 'L')
        {
+        lcd.clear();
+         lcd.setCursor(0,0);
+         lcd.print("Water level : 30%");
+        lcd.setCursor(0,1);
+        lcd.write(0);
           
         }
         else if (c == 'M')
         {
+          lcd.clear();
+          lcd.setCursor(0,0);
+         lcd.print("Water level : 60%");
+        lcd.setCursor(0,1);
+        lcd.write(1);
           
           }
-          else if (c == 'H'){
-          
+          else if (c == 'H')
+          {
+           lcd.clear();
+           lcd.setCursor(0,0);
+         lcd.print("Water level : 90%");
+        lcd.setCursor(0,1);
+        lcd.write(2);
           }
+      else if (c == 'A')
+          {
+            lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Fingerprint");
+        lcd.setCursor(0,1);
+        lcd.print("Not Match");
+        
+         digitalWrite(buzzer,LOW); 
+        delay(2000);
+         lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print(" Unauthorize");
+        lcd.setCursor(0,1);
+        lcd.print("person Enter");
+        
+         digitalWrite(buzzer,LOW); 
+        delay(1000);
+
+         digitalWrite(buzzer,LOW); 
+          delay(2000);
+            }
+            else if (c == 'G')
+          {
+            lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Fingerprint");
+        lcd.setCursor(0,1);
+        lcd.print("Match");
+        delay(2000);
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("authorized");
+        lcd.setCursor(0,1);
+        lcd.print("person");
+        delay(2000);
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Dam level-high");
+        lcd.setCursor(0,1);
+        lcd.print("DOOR OPEN");
+        delay(2000);
+
+
+        
         }
+        else
+        {
+          lcd.clear();
+   lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print("Flood Detection");
+  lcd.setCursor(0,1);
+  lcd.print("Using zigbee");
+          }
+}
 }
 
