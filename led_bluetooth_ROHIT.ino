@@ -2,7 +2,10 @@
 int fan = 3;
 int light = 4;
 int state;
-
+int val1 = 0;     // variable for reading the pin status
+int val2 = 0;  
+int fanswitch = 5;
+int lightswitch = 6;
 void setup() {
     // sets the pins as outputs:
     pinMode(3, OUTPUT);
@@ -13,10 +16,14 @@ void setup() {
 digitalWrite(3, HIGH);
 digitalWrite(4, HIGH);
 
+pinMode(fanswitch, INPUT_PULLUP);
+pinMode(lightswitch, INPUT_PULLUP);
     
 }
 
 void loop() {
+   val1 = digitalRead(fanswitch);
+    val2 = digitalRead(lightswitch);
     //if some date is sent, reads it and saves in state
     if(Serial.available() > 0){     
       state = Serial.read();   
@@ -47,8 +54,7 @@ void loop() {
        Serial.println("LIGHT ON");
        delay(100);
    }
-   
-   else
+    else
     {
         
        
@@ -57,4 +63,17 @@ void loop() {
          
         
     }
+   
+  
+    while(val1 == LOW)
+   {
+   digitalWrite(fan, !digitalRead(fan));
+   }
+    while(val2 == LOW)
+
+    {
+   digitalWrite(light, !digitalRead(light));
+   }
+   
+  
 }
