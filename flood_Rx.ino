@@ -8,37 +8,7 @@ SoftwareSerial XBee(2,3);
 char c = ' ';
 
 int buzzer = 9; // buzzer for fake person & high level
-byte customCharL[] = {
-  B00000,
-  B00000,
-  B00000,
-  B00000,  //LOW WATER LEVEL
-  B00000,
-  B00000,
-  B11111,
-  B11111
-};
-byte customCharM[] = {
-  B00000,
-  B00000,
-  B00000,
-  B11111,   //MEDIUM WATER LEVEL
-  B11111,
-  B11111,
-  B11111,
-  B11111
-};
 
-byte customCharH[] = {
-  B11111,
-  B11111,
-  B11111, //HIGH WATER LEVEL
-  B11111,
-  B11111,
-  B11111,
-  B11111,
-  B11111
-};
 
 
 void setup() {
@@ -53,9 +23,7 @@ XBee.begin(9600);
 Serial.begin(9600);
 pinMode(9,OUTPUT);
 digitalWrite(buzzer,HIGH); 
-lcd.createChar(0, customCharL);
-lcd.createChar(1, customCharM);
-lcd.createChar(2, customCharH);
+
 }
 
 void loop() {
@@ -112,7 +80,22 @@ void loop() {
             }
             else if (c == 'G')
           {
-            lcd.clear();
+            
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Dam level-high");
+        lcd.setCursor(0,1);
+        lcd.print("DOOR OPEN");
+        delay(2000);
+
+
+        
+        }
+
+         else if (c == 'Z')
+         {
+          
+         lcd.clear();
         lcd.setCursor(0,0);
         lcd.print("Fingerprint");
         lcd.setCursor(0,1);
@@ -124,16 +107,8 @@ void loop() {
         lcd.setCursor(0,1);
         lcd.print("person");
         delay(2000);
-        lcd.clear();
-        lcd.setCursor(0,0);
-        lcd.print("Dam level-high");
-        lcd.setCursor(0,1);
-        lcd.print("DOOR OPEN");
-        delay(2000);
-
-
-        
-        }
+          
+          }
         else
         {
           lcd.clear();
@@ -145,4 +120,3 @@ void loop() {
           }
 }
 }
-
