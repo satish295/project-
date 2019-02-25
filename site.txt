@@ -1,0 +1,9 @@
+http://www.circuitstoday.com/lm35-and-arduino-interfacing     
+
+https://www.14core.com/introduction-of-acs712-current-sensor-module-30a-with-arduino/
+
+https://forum.arduino.cc/index.php?topic=559418.0
+
+https://www.allaboutcircuits.com/projects/monitor-temperature-with-an-arduino/
+
+https://www.tutorialspoint.com/tutorialslibrary.htm
