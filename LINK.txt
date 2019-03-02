@@ -1,2 +1,5 @@
 https://maxpromer.github.io/LCD-Character-Creator/
 https://randomnerdtutorials.com/arduino-display-the-led-brightness-on-a-lcd-16x2/
+https://www.slideshare.net/amaljojojue/automatic-power-factor-correction-report
+http://www.studypoint.cf/2018/
+https://innovatorsguru.com/ac-digital-multifunction-meter-using-pzem-004t/
