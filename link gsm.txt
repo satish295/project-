@@ -9,3 +9,15 @@ https://lastminuteengineers.com/a6-gsm-gprs-module-arduino-tutorial/
 
 
 https://create.arduino.cc/projecthub/brink-io/gsm-based-home-automation-fe5e57
+
+https://circuitdigest.com/microcontroller-projects/automatic-call-answering-machine-using-arduino
+
+
+http://www.circuitstoday.com/interface-gsm-module-with-arduino
+
+https://www.homemade-circuits.com/sms-based-pump-controller-with-automatic-dry-run-shut-off/
+
+
+https://forum.arduino.cc/index.php?topic=557397.0
+
+https://elementztechblog.wordpress.com/2014/10/10/interfacing-sim900a-gsm-modem-with-arduino/
