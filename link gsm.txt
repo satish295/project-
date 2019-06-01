@@ -1,8 +1,11 @@
 https://microcontrollerslab.com/gsm-based-home-automation-project/
 
+http://www.embeddedadvice.com/t/arduino-dtmf-tutorial-using-sim900-sim800-modules-live-demo/430/6
+
+https://www.raviyp.com/embedded/232-arduino-dtmf-tutorial-using-sim900-sim800-modules-live-demo
 
 
-
+https://sites.google.com/view/vicinityinfoindia/missed-call-based-motor-on-off-and-also-get-current-temperature-humidit
 
 https://lastminuteengineers.com/a6-gsm-gprs-module-arduino-tutorial/
 
