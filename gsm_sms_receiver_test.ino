@@ -1,6 +1,6 @@
 #include <SoftwareSerial.h>
-SoftwareSerial mySerial(9, 10);
-#define pumpon1 3
+SoftwareSerial mySerial(7, 8);
+#define pumpon1 13
 #define pumpon2 4
 
 int temp=0,i=0;
@@ -48,7 +48,7 @@ void serialEvent()
  {
   while(mySerial.available()) 
   {
-    if(mySerial.find("#A."))
+    if(mySerial.find("#"))
     {
       digitalWrite(led, HIGH);
       delay(1000);
@@ -73,16 +73,16 @@ void check()
     {
       digitalWrite(pumpon1,HIGH);
       Serial.print("ON    ");
-      delay(200);
+      
       
       
     }  
    
-   else if(!(strncmp(str,"pump off",6)))
+   else if(!(strncmp(str,"pump off",8)))
     {
       digitalWrite(pumpon1, LOW); 
       Serial.print("OFF    ");
-      delay(200);
+      
     }
  
     }
