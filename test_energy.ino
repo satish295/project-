@@ -14,11 +14,30 @@ LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars
 #include <PZEM004Tv30.h>
 #include <SoftwareSerial.h>
 
+BlynkTimer timer; 
+
 PZEM004Tv30 pzem(D7, D8);
+
+WidgetLED led1(V1);
+// V1 LED Widget is blinking
+void blinkLedWidget()  // function for switching off and on LED
+{
+  if (led1.getValue()) {
+    led1.off();
+    Serial.println("LED on V1: off");
+  } else {
+    led1.on();
+    Serial.println("LED on V1: on");
+  }
+}
 void setup() {
 Serial.begin(115200);
+timer.setInterval(1000L, blinkLedWidget);
 }
 void loop() {
+ Blynk.run();
+ timer.run();
+ 
 float voltage = pzem.voltage();
 if(voltage != NAN){
 Serial.print("Voltage: "); Serial.print(voltage); Serial.println("V");
