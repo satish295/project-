@@ -1,3 +1,16 @@
+#define BLYNK_TEMPLATE_ID "TMPLEgWUyyND"
+#define BLYNK_DEVICE_NAME "Building automation"
+#define BLYNK_AUTH_TOKEN "utN9ZtqeN92al_TZ2Wvb7NaYOmvoYT5N"
+#define BLYNK_PRINT Serial
+
+//BlynkTimer timer;  
+ #include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
 #include <PZEM004Tv30.h>
 #include <SoftwareSerial.h>
 
