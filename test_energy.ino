@@ -74,7 +74,8 @@ void loop() {
 float voltage = pzem.voltage();
 if(voltage != NAN){
 Serial.print("Voltage: "); Serial.print(voltage); Serial.println("V");
- 
+ lcd.setCursor(0,3);
+  lcd.print(voltage);
  Blynk.virtualWrite(V3, voltage);
 } else {
 Serial.println("Error reading voltage");
@@ -82,6 +83,8 @@ Serial.println("Error reading voltage");
 float current = pzem.current();
 if(current != NAN){
 Serial.print("Current: "); Serial.print(current); Serial.println("A");
+ lcd.setCursor(0,11);
+  lcd.print(current);
  Blynk.virtualWrite(V4, current);
 } else {
 Serial.println("Error reading current");
@@ -89,6 +92,8 @@ Serial.println("Error reading current");
 float power = pzem.power();
 if(current != NAN){
 Serial.print("Power: "); Serial.print(power); Serial.println("W");
+  lcd.setCursor(1,3);
+  lcd.print(power);
  Blynk.virtualWrite(V5, power);
 } else {
 Serial.println("Error reading power");
@@ -96,6 +101,8 @@ Serial.println("Error reading power");
 float energy = pzem.energy();
 if(current != NAN){
 Serial.print("Energy: "); Serial.print(energy,3); Serial.println("kWh");
+ lcd.setCursor(1,11);
+  lcd.print(energy);
  Blynk.virtualWrite(V6, energy);
 } else {
 Serial.println("Error reading energy");
