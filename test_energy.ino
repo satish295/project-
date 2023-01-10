@@ -46,16 +46,35 @@ void blinkLedWidget1()  // function for switching off and on LED
 
 void setup() {
 Serial.begin(115200);
+ lcd.init();                      // initialize the lcd 
+  lcd.init();
+  // Print a message to the LCD.
+  lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print("IOT Base");
+  lcd.setCursor(0,1);
+  lcd.print("Energy Meter");
+ 
 timer.setInterval(1000L, blinkLedWidget);
  timer.setInterval(1000L, blinkLedWidget1);
 }
 void loop() {
  Blynk.run();
  timer.run();
+ lcd.clear();
+ lcd.setCursor(0,0);
+  lcd.print("V:");
+ lcd.setCursor(0,8);
+  lcd.print("I:");
+ lcd.setCursor(1,0);
+  lcd.print("W:")
+   lcd.setCursor(1,8);
+  lcd.print("KWh:")
  
 float voltage = pzem.voltage();
 if(voltage != NAN){
 Serial.print("Voltage: "); Serial.print(voltage); Serial.println("V");
+ 
  Blynk.virtualWrite(V3, voltage);
 } else {
 Serial.println("Error reading voltage");
