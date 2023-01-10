@@ -30,9 +30,24 @@ void blinkLedWidget()  // function for switching off and on LED
     Serial.println("LED on V1: on");
   }
 }
+
+WidgetLED led2(V2);
+
+void blinkLedWidget1()  // function for switching off and on LED
+{
+  if (led2.getValue()) {
+    led2.off();
+    Serial.println("LED on V2: off");
+  } else {
+    led2.on();
+    Serial.println("LED on V2: on");
+  }
+}
+
 void setup() {
 Serial.begin(115200);
 timer.setInterval(1000L, blinkLedWidget);
+ timer.setInterval(1000L, blinkLedWidget1);
 }
 void loop() {
  Blynk.run();
