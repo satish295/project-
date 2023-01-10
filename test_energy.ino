@@ -56,30 +56,35 @@ void loop() {
 float voltage = pzem.voltage();
 if(voltage != NAN){
 Serial.print("Voltage: "); Serial.print(voltage); Serial.println("V");
+ Blynk.virtualWrite(V3, voltage);
 } else {
 Serial.println("Error reading voltage");
 }
 float current = pzem.current();
 if(current != NAN){
 Serial.print("Current: "); Serial.print(current); Serial.println("A");
+ Blynk.virtualWrite(V4, current);
 } else {
 Serial.println("Error reading current");
 }
 float power = pzem.power();
 if(current != NAN){
 Serial.print("Power: "); Serial.print(power); Serial.println("W");
+ Blynk.virtualWrite(V5, power);
 } else {
 Serial.println("Error reading power");
 }
 float energy = pzem.energy();
 if(current != NAN){
 Serial.print("Energy: "); Serial.print(energy,3); Serial.println("kWh");
+ Blynk.virtualWrite(V6, energy);
 } else {
 Serial.println("Error reading energy");
 }
 float frequency = pzem.frequency();
 if(current != NAN){
 Serial.print("Frequency: "); Serial.print(frequency, 1); Serial.println("Hz");
+  Blynk.virtualWrite(V7, frequency);
 } else {
 Serial.println("Error reading frequency");
 }
