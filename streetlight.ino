@@ -38,9 +38,12 @@ int buttonState3 = 0;         // variable for reading the pushbutton status
 void setup() {
   // initialize the LED pin as an output:
   pinMode(ledPin1, OUTPUT);
-
+  pinMode(ledPin2, OUTPUT);
+  pinMode(ledPin3, OUTPUT);
   // initialize the pushbutton pin as an input:
-  pinMode(IRSensor, INPUT); // IR Sensor pin INPUT
+  pinMode(IRSensor1, INPUT); // IR Sensor pin INPUT
+  pinMode(IRSensor2, INPUT); // IR Sensor pin INPUT
+  pinMode(IRSensor3, INPUT); // IR Sensor pin INPUT
 }
 
 void loop() {
@@ -50,7 +53,7 @@ void loop() {
 AnalogValue = analogRead(A0);
 
 Serial.println(AnalogValue);
-
+if (AnalogValue > 500) {
   buttonState1 = digitalRead(IRSensor1);
   buttonState2 = digitalRead(IRSensor2);
   buttonState3 = digitalRead(IRSensor3);
@@ -74,4 +77,12 @@ Serial.println(AnalogValue);
     analogWrite(ledPin2, 100);
     analogWrite(ledPin3, 100);
   }
+}
+else
+{
+    analogWrite(ledPin1, 0);
+    analogWrite(ledPin2, 0);
+    analogWrite(ledPin3, 0);
+
+}
 }
