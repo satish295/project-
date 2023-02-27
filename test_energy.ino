@@ -1,116 +1,113 @@
-#define BLYNK_TEMPLATE_ID "TMPLEgWUyyND"
-#define BLYNK_DEVICE_NAME "Building automation"
-#define BLYNK_AUTH_TOKEN "utN9ZtqeN92al_TZ2Wvb7NaYOmvoYT5N"
+#include <PZEM004Tv30.h>
+#include <SoftwareSerial.h>
 #define BLYNK_PRINT Serial
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+#include <EEPROM.h>
 
-//BlynkTimer timer;  
- #include <Wire.h> 
+#include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 
 LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
+//#define BLYNK_TEMPLATE_ID "TMPL4RH9iGGH"
+//#define BLYNK_TEMPLATE_NAME "IOT base Energy Meter"
+//#define BLYNK_AUTH_TOKEN "HpIPJnsfBXS0FLRjR46jbgVBxArVEtWh"
 
-#include <ESP8266WiFi.h>
-#include <BlynkSimpleEsp8266.h>
-#include <PZEM004Tv30.h>
-#include <SoftwareSerial.h>
+//char AUTH[] = "-----------------"; //Auth code sent via Email
 
-BlynkTimer timer; 
+char AUTH[] = "HpIPJnsfBXS0FLRjR46jbgVBxArVEtWh"; //Auth code sent via Email
+char WIFI_SSID[] = "VIRUS"; //Wifi name
+char WIFI_PASS[] = "EXTC2021";  //Wifi Password
+
+#define Relay1  D0 //GPIO 16
+#define Relay2  D3 //GPIO 0
+
+#define Switch1 10 //SD3
+#define Switch2 9  //SD2
+
+
+#define wifiLed D4 //GPIO 2
+
+int load1, load2;
+int wifiFlag = 1;
+
+BlynkTimer timer;
+
+void checkBlynkStatus() { // called every 3 seconds by SimpleTimer
+  bool isconnected = Blynk.connected();
+  if (isconnected == false) {wifiFlag = 1;
+    digitalWrite(wifiLed, HIGH); //Turn off WiFi LED
+  }
+  if (isconnected == true) {
+  if(wifiFlag==1){wifiFlag = 0;
+  update_blynk();
+  }  
+    digitalWrite(wifiLed, LOW); //Turn on WiFi LED
+  }
+}
 
 PZEM004Tv30 pzem(D7, D8);
 
-WidgetLED led1(V1);
-// V1 LED Widget is blinking
-void blinkLedWidget()  // function for switching off and on LED
-{
-  if (led1.getValue()) {
-    led1.off();
-    Serial.println("LED on V1: off");
-  } else {
-    led1.on();
-    Serial.println("LED on V1: on");
-  }
-}
-
-WidgetLED led2(V2);
-
-void blinkLedWidget1()  // function for switching off and on LED
-{
-  if (led2.getValue()) {
-    led2.off();
-    Serial.println("LED on V2: off");
-  } else {
-    led2.on();
-    Serial.println("LED on V2: on");
-  }
-}
 
 void setup() {
 Serial.begin(115200);
- lcd.init();                      // initialize the lcd 
-  lcd.init();
-  // Print a message to the LCD.
+pinMode(Switch1, INPUT_PULLUP);
+pinMode(Switch2, INPUT_PULLUP);
+
+
+EEPROM.begin(512);
+load1 = EEPROM.read(1);
+load2 = EEPROM.read(2);
+
+pinMode(Relay1, OUTPUT); 
+pinMode(Relay2, OUTPUT); 
+
+
+Relays();
+
+pinMode(wifiLed, OUTPUT);
+
+WiFi.begin(WIFI_SSID, WIFI_PASS);
+timer.setInterval(3000L, checkBlynkStatus); // check if Blynk server is connected every 3 seconds
+Blynk.config(AUTH);
+delay(100);
+lcd.init();
   lcd.backlight();
-  lcd.setCursor(0,0);
-  lcd.print("IOT Base");
-  lcd.setCursor(0,1);
-  lcd.print("Energy Meter");
- 
-timer.setInterval(1000L, blinkLedWidget);
- timer.setInterval(1000L, blinkLedWidget1);
+ lcd.clear();
+lcd.setCursor(0,0);
+ lcd.print("IOT Base");
+ lcd.setCursor(0,1);
+lcd.print("Energy Meter ");
+
 }
 void loop() {
- Blynk.run();
- timer.run();
- lcd.clear();
- lcd.setCursor(0,0);
-  lcd.print("V:");
- lcd.setCursor(0,8);
-  lcd.print("I:");
- lcd.setCursor(1,0);
-  lcd.print("W:")
-   lcd.setCursor(1,8);
-  lcd.print("KWh:")
- 
 float voltage = pzem.voltage();
 if(voltage != NAN){
 Serial.print("Voltage: "); Serial.print(voltage); Serial.println("V");
- lcd.setCursor(0,3);
-  lcd.print(voltage);
- Blynk.virtualWrite(V3, voltage);
 } else {
 Serial.println("Error reading voltage");
 }
 float current = pzem.current();
 if(current != NAN){
 Serial.print("Current: "); Serial.print(current); Serial.println("A");
- lcd.setCursor(0,11);
-  lcd.print(current);
- Blynk.virtualWrite(V4, current);
 } else {
 Serial.println("Error reading current");
 }
 float power = pzem.power();
 if(current != NAN){
 Serial.print("Power: "); Serial.print(power); Serial.println("W");
-  lcd.setCursor(1,3);
-  lcd.print(power);
- Blynk.virtualWrite(V5, power);
 } else {
 Serial.println("Error reading power");
 }
 float energy = pzem.energy();
 if(current != NAN){
 Serial.print("Energy: "); Serial.print(energy,3); Serial.println("kWh");
- lcd.setCursor(1,11);
-  lcd.print(energy);
- Blynk.virtualWrite(V6, energy);
 } else {
 Serial.println("Error reading energy");
 }
 float frequency = pzem.frequency();
 if(current != NAN){
 Serial.print("Frequency: "); Serial.print(frequency, 1); Serial.println("Hz");
-  Blynk.virtualWrite(V7, frequency);
 } else {
 Serial.println("Error reading frequency");
 }
@@ -122,4 +119,73 @@ Serial.println("Error reading power factor");
 }
 Serial.println();
 delay(2000);
+
+if (WiFi.status() != WL_CONNECTED){
+    //Serial.println("WiFi Not Connected");
+  }
+  else{
+    //Serial.println("WiFi Connected");
+    Blynk.run();
+  }
+ 
+if(wifiFlag==0){with_internet();}
+           else{without_internet();}
+
+ timer.run(); // Initiates SimpleTimer
+ 
+}
+BLYNK_WRITE(V0){
+load1 = param.asInt();
+Relays();
+}
+
+BLYNK_WRITE(V1){
+load2 = param.asInt(); 
+Relays();
+}
+
+void with_internet(){
+     if(digitalRead(Switch1) == LOW){
+      load1 = !load1;
+      Relays(); 
+      update_blynk();
+      delay(300); 
+    }
+else if(digitalRead(Switch2) == LOW){
+      load2 = !load2;
+      Relays(); 
+      update_blynk();
+      delay(300);
+    }
+}
+void without_internet(){
+     if(digitalRead(Switch1) == LOW){
+      load1 = !load1;
+      Relays(); 
+      delay(300); 
+    }
+else if(digitalRead(Switch2) == LOW){
+      load2 = !load2;
+      Relays(); 
+      delay(300);
+    }
+}
+
+void update_blynk(){
+Blynk.virtualWrite(V0, load1);  
+Blynk.virtualWrite(V1, load2);
+
+}
+
+void Relays(){
+digitalWrite(Relay1, load1);  
+digitalWrite(Relay2, load2);
+
+write_eeprom();
+}
+
+void write_eeprom(){
+EEPROM.write(1, load1);
+EEPROM.write(2, load2);
+EEPROM.commit(); 
 }
