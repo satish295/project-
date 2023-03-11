@@ -1,0 +1,131 @@
+
+#include <Wire.h>
+//#include <Adafruit_GFX.h>
+//#include <Adafruit_SSD1306.h>
+#include <SimpleTimer.h>
+#include <stdlib.h>
+#include <SoftwareSerial.h>
+SoftwareSerial nodemcu(2,3);
+#include <EEPROM.h>
+#include "GravityTDS.h"
+ int sensorPin = A2;
+int turbidity = 0;
+#define TdsSensorPin A1
+GravityTDS gravityTds;
+int sensorValue;
+ String cdata; // complete data, consisting of sensors values
+ 
+float temperature = 25,tdsValue = 0;
+
+ int threshold1 = 5.5;
+  int threshold2 = 8.5;
+  
+ const int LED = 5;
+SimpleTimer timer;
+ 
+float calibration_value = 21.34 - 0.7;
+int phval = 0; 
+unsigned long int avgval; 
+int buffer_arr[10],temp;
+ 
+float ph_act;
+// for the OLED display
+// 
+//#define SCREEN_WIDTH 128 // OLED display width, in pixels
+//#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+// 
+// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+//#define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+//Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+ 
+void setup() 
+{
+  Wire.begin();
+ Serial.begin(9600);
+//  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+//  display.clearDisplay();
+//  display.setTextColor(WHITE); 
+nodemcu.begin(9600);
+//  pinMode (sensor2, INPUT);
+ pinMode(LED, OUTPUT); 
+ digitalWrite(LED,HIGH);
+//timer.setInterval(500L, display_pHValue);
+// Serial.begin(115200);
+    gravityTds.setPin(TdsSensorPin);
+    gravityTds.setAref(5.0);  //reference voltage on ADC, default 5.0V on Arduino UNO
+    gravityTds.setAdcRange(1024);  //1024 for 10bit ADC;4096 for 12bit ADC
+    gravityTds.begin();  //initialization
+}
+void loop() {
+//  int analogValue2 = analogRead(sensor2);
+  //Serial.println(analogValue2);
+//  timer.run(); // Initiates SimpleTimer
+{
+    //temperature = readTemperature();  //add your temperature sensor and read it
+    gravityTds.setTemperature(temperature);  // set the temperature and execute temperature compensation
+    gravityTds.update();  //sample and calculate
+    tdsValue = gravityTds.getTdsValue();  // then get the value
+    Serial.print(tdsValue,0);
+    Serial.println("ppm");
+    delay(1000);
+}
+
+
+  int sensorValue = analogRead(sensorPin);
+  int turbidity = map(sensorValue, 0,640, 100, 0);
+  delay(100);
+  Serial.println(turbidity);
+  delay(1000);
+
+
+ for(int i=0;i<10;i++) 
+ { 
+ buffer_arr[i]=analogRead(A0);
+ delay(30);
+ }
+ for(int i=0;i<9;i++)
+ {
+ for(int j=i+1;j<10;j++)
+ {
+ (buffer_arr[i]>buffer_arr[j]);
+ {
+ temp=buffer_arr[i];
+ buffer_arr[i]=buffer_arr[j];
+ buffer_arr[j]=temp;
+ }
+ }
+ }
+ avgval=0;
+ for(int i=2;i<8;i++)
+ avgval+=buffer_arr[i]; 
+ float volt=(float)avgval*5.0/1024/6; 
+  ph_act = -5.70 * volt + calibration_value;
+ 
+ Serial.println("pH Val: ");
+ Serial.println(ph_act);
+ // nodemcu.println(ph_act);
+  //nodemcu.println(tdsValue);
+ delay(1000);
+
+cdata = cdata + ph_act+","+tdsValue+","+turbidity; // comma will be used a delimeter
+   Serial.println(cdata); 
+   nodemcu.println(cdata);
+   delay(2000); // 100 milli seconds
+   cdata = ""; 
+   
+ if((threshold1 <ph_act && ph_act < threshold2) && (tdsValue < 70 ) && (turbidity < 20)  )
+ {
+  digitalWrite(LED, LOW);// turn the LED off.(Note that LOW is the voltage level but actually
+  Serial.print("motor on");
+  ///delay(5000);
+  
+  }
+
+  else
+  {
+    
+    digitalWrite(LED,HIGH);// turn the LED off.(Note that LOW is the voltage level but actually 
+    ///delay(5000);
+Serial.print("motor off");
+    }
+}
