@@ -1,0 +1,55 @@
+#include "OneButton.h"                              //we need the OneButton library
+ 
+ 
+OneButton button(A1, true);                         //attach a button on pin A1 to the library
+ 
+  
+ 
+void setup() {
+ 
+  //pinMode(13, OUTPUT);                              // sets the digital pin as output
+  pinMode(12, OUTPUT);                              // sets the digital pin as output
+  pinMode(11, OUTPUT);                              // sets the digital pin as output
+  pinMode(LED_BUILTIN, OUTPUT);
+     
+  button.attachDoubleClick(doubleclick);            // link the function to be called on a doubleclick event.
+  button.attachClick(singleclick);                  // link the function to be called on a singleclick event.
+  button.attachLongPressStop(longclick);            // link the function to be called on a longpress event.
+  Serial.begin(9600);
+} 
+  
+ 
+ 
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+  button.tick();                                    // check the status of the button
+ 
+ 
+  delay(10);                                        // a short wait between checking the button
+} // loop
+ 
+ 
+ 
+void doubleclick() {                                // what happens when button is double-clicked
+ digitalWrite(11,HIGH);                             // light the green LED
+ delay(1000);                                       // wait one second
+ digitalWrite(11,LOW);                              // turn off green LED
+
+ Serial.print("double trip");
+} 
+ 
+void singleclick(){                                 // what happens when the button is clicked
+ digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+delay(1000);
+ Serial.print("single trip");
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+}
+ 
+void longclick(){                                   // what happens when buton is long-pressed
+  //digitalWrite(13,HIGH);                            // light the blue LED
+ //delay(1000);                                       // wait one second
+ //digitalWrite(13,LOW);                              // turn off the blue LED
+ digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+ Serial.print("permanant trip");
+ delay(10000);
+}
