@@ -1,0 +1,95 @@
+// Sensor pins
+#define sensorPower 5
+#define soundPin 6
+
+ #define waterPin 7
+#define relayPin1 8
+#define relayPin2 9
+
+#include <SoftwareSerial.h> 
+SoftwareSerial gsmSerial(2,3);
+String destinationNumber = "+917738041183";
+
+// Variable to store the time when last event happened
+unsigned long lastEvent = 0;
+boolean relayState = false;    // Variable to store the state of relay
+
+void setup() {
+  pinMode(sensorPower, OUTPUT);
+
+  // Initially keep the sensor OFF
+  digitalWrite(sensorPower, LOW);
+  pinMode(relayPin1, OUTPUT);  // Set relay pin as an OUTPUT pin
+  pinMode(relayPin2, OUTPUT);  // Set relay pin as an OUTPUT pin
+  pinMode(soundPin, INPUT);  // Set sensor pin as an INPUT
+  Serial.begin(9600);
+}
+
+void loop() {
+  //get the reading from the function below and print it
+  int val = readSensor();
+  int val2 = readsoundSensor();
+  Serial.print("Digital Output: ");
+  Serial.println(val);
+
+  // Determine status of rain
+  if (val) {
+    Serial.println("Status: Clear");
+  } else {
+    Serial.println("Status: It's raining");
+  }
+
+  delay(1000);  // Take a reading every second
+  Serial.println();
+}
+
+//  This function returns the sensor output
+int readSensor() {
+  digitalWrite(sensorPower, HIGH);  // Turn the sensor ON
+  delay(10);              // Allow power to settle
+  int val2 = digitalRead(soundPin); // Read the sensor output
+  digitalWrite(sensorPower, LOW);   // Turn the sensor OFF
+  return val2;             // Return the value
+}
+
+int readsoundSensor() {
+  {
+  // Read Sound sensor
+  int sensorData = digitalRead(soundPin);
+
+  // If pin goes LOW, sound is detected
+  if (sensorData == LOW) {
+
+  // If 25ms have passed since last LOW state, it means that
+  // the clap is detected and not due to any spurious sounds
+  if (millis() - lastEvent > 25) {
+    //toggle relay and set the output
+    relayState = !relayState;
+    digitalWrite(relayPin1, HIGH);
+    digitalWrite(relayPin2, LOW);
+    delay(100);
+    digitalWrite(relayPin1, LOW);
+    digitalWrite(relayPin2, HIGH);
+    delay(100);
+  }
+
+  // Remember when last event happened
+  lastEvent = millis();
+  }
+}
+  }
+
+  void smssend(){
+
+gsmSerial.begin(4800);
+gsmSerial.print("AT+CMGF=1\r");
+delay(1000);
+gsmSerial.println("AT + CMGS = \"" + destinationNumber +"\"");
+delay(1000);
+gsmSerial.print("Satish Lakhan");
+delay(1000);
+gsmSerial.write((char)26);
+ delay(1000);
+gsmSerial.println("AT+CLTS=1");
+gsmSerial.println("AT+CCLK?");
+}
